@@ -1,0 +1,55 @@
+CREATE DATABASE IF NOT EXISTS pharmacie;
+
+USE pharmacie;
+
+CREATE TABLE IF NOT EXISTS medicament (
+  code_medic INT NOT NULL,
+  libelle_medic VARCHAR(100) DEFAULT NULL,
+  prix_unitaire DECIMAL(10,2) DEFAULT NULL,
+  quantite INT DEFAULT NULL,
+  PRIMARY KEY (code_medic)
+);
+
+CREATE TABLE IF NOT EXISTS pharmacien (
+  username VARCHAR(10) NOT NULL,
+  password CHAR(10) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS vente (
+  num_vente INT NOT NULL AUTO_INCREMENT,
+  code_medic INT DEFAULT NULL,
+  quantite_vendue INT NOT NULL,
+  PRIMARY KEY (num_vente),
+  KEY code_medic (code_medic),
+  FOREIGN KEY (code_medic) REFERENCES medicament(code_medic)
+);
+
+CREATE TABLE IF NOT EXISTS fournisseur (
+  code_fournisseur INT NOT NULL,
+  prenom_fournisseur VARCHAR(20) NOT NULL,
+  nom_fournisseur VARCHAR(20) NOT NULL,
+  age_fournisseur INT NOT NULL,
+  telephone_fournisseur INT NOT NULL,
+  addresse_fournisseur VARCHAR(100) NOT NULL,
+  PRIMARY KEY (code_fournisseur)
+);
+
+INSERT INTO medicament (code_medic, libelle_medic, prix_unitaire, quantite)
+VALUES
+  (1, 'Paracétamol', 5.99, 200),
+  (2, 'Ibuprofène', 8.50, 150),
+  (3, 'Aspirine', 3.75, 100),
+  (4, 'Amoxicilline', 12.99, 50),
+  (5, 'Omeprazole', 9.25, 80);
+
+INSERT INTO fournisseur (code_fournisseur, prenom_fournisseur, nom_fournisseur, age_fournisseur, telephone_fournisseur, addresse_fournisseur)
+VALUES
+  (1, 'Jean', 'Dupont', 35, 1234567890, '123 Rue des Fournisseurs'),
+  (2, 'Marie', 'Martin', 42, 9876543210, '456 Avenue des Approvisionnements'),
+  (3, 'Luc', 'Dubois', 28, 5678901234, '789 Boulevard des Livraisons'),
+  (4, 'Sophie', 'Lefevre', 39, 4321098765, '321 Place des Distributeurs'),
+  (5, 'Pierre', 'Rousseau', 51, 6789012345, '654 Route des Approvisionnements');
+
+
+INSERT INTO `pharmacien` (`username`, `password`) VALUES
+('admin', 'adrar');

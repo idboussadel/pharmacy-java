@@ -1,0 +1,470 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import java.sql.ResultSet;
+/**
+ *
+ * @author user
+ */
+public class ajouterfournisseur extends javax.swing.JFrame {
+
+    /**
+     * Creates new form ajouterfournisseur
+     */
+    public ajouterfournisseur() {
+        initComponents();
+       btnajouterfournisseur.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String code = inputcodefournisseur.getText();
+            String prenom = prenomfournisseur.getText();
+            String nom = nomfournisseur.getText();
+            String ageText = agefournisseur.getText();
+            String telephone = inputtelfournisseur.getText();
+            String adresse = inputadrfournisseur.getText();
+
+            if (code.isEmpty() || prenom.isEmpty() || nom.isEmpty() || ageText.isEmpty() || telephone.isEmpty() || adresse.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Veuillez remplir tous les champs");
+                return;
+            }
+
+            int age = 0;
+            try {
+                age = Integer.parseInt(ageText);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "L'âge doit être un nombre valide");
+                return;
+            }
+
+            if (existeFournisseur(code)) {
+                JOptionPane.showMessageDialog(null, "Ce fournisseur existe déjà");
+                return;
+            }
+
+            if (!isCodeValid(code) || !isAgeValid(age) || !isNomValid(nom) || !isPrenomValid(prenom) || !isAdresseValid(adresse) || !isTelephoneValid(telephone)) {
+                JOptionPane.showMessageDialog(null, "Veuillez entrer les types de données corrects pour les champs");
+                return;
+            }
+
+            ajouterFournisseur(code, prenom, nom, age, telephone, adresse);
+        }
+    });
+    }
+    public boolean existeFournisseur(String code) {
+    try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pharmacie", "root", "")) {
+        String query = "SELECT COUNT(*) FROM fournisseur WHERE code_fournisseur = ?";
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setString(1, code);
+
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            int count = resultSet.getInt(1);
+            return count > 0; 
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+    
+    return false;
+}
+   public void ajouterFournisseur(String code, String prenom, String nom, int age, String telephone, String adresse) {
+    try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pharmacie", "root", "")) {
+        String query = "INSERT INTO fournisseur (code_fournisseur, prenom_fournisseur, nom_fournisseur, age_fournisseur, telephone_fournisseur, addresse_fournisseur) VALUES (?, ?, ?, ?, ?, ?)";
+        PreparedStatement statement = conn.prepareStatement(query);
+
+        statement.setString(1, code);
+        statement.setString(2, prenom);
+        statement.setString(3, nom);
+        statement.setInt(4, age);
+        statement.setString(5, telephone);
+        statement.setString(6, adresse);
+
+        int rowsInserted = statement.executeUpdate();
+
+        if (rowsInserted > 0) {
+            JOptionPane.showMessageDialog(null, "Le fournisseur a été ajouté avec succès");
+        } else {
+            JOptionPane.showMessageDialog(null, "Échec de l'ajout du fournisseur.");
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+}
+   
+public boolean isCodeValid(String code) {
+    try {
+        Integer.parseInt(code);
+        return true;
+    } catch (NumberFormatException ex) {
+        return false;
+    }
+}
+
+public boolean isAgeValid(int age) {
+    return age > 0;
+}
+
+public boolean isNomValid(String nom) {
+    return nom.matches("[a-zA-Z]+");
+}
+
+public boolean isPrenomValid(String prenom) {
+    return prenom.matches("[a-zA-Z]+");
+}
+
+public boolean isAdresseValid(String adresse) {
+    return adresse.matches("[a-zA-Z0-9 ]+");
+}
+
+public boolean isTelephoneValid(String telephone) {
+    try {
+        Integer.parseInt(telephone);
+        return true;
+    } catch (NumberFormatException ex) {
+        return false;
+    }
+
+}
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel1 = new javax.swing.JLabel();
+        agefournisseur = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        btnajouterfournisseur = new javax.swing.JButton();
+        btnprec = new javax.swing.JButton();
+        btnaccueil = new javax.swing.JButton();
+        inputcodefournisseur = new javax.swing.JTextField();
+        prenomfournisseur = new javax.swing.JTextField();
+        nomfournisseur = new javax.swing.JTextField();
+        inputtelfournisseur = new javax.swing.JTextField();
+        inputadrfournisseur = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/PAGEREF.jpg"))); // NOI18N
+
+        agefournisseur.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                agefournisseurActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 30)); // NOI18N
+        jLabel2.setText("Ajouter un fournisseur");
+
+        btnajouterfournisseur.setBackground(new java.awt.Color(51, 170, 0));
+        btnajouterfournisseur.setFont(new java.awt.Font("Segoe UI", 0, 28)); // NOI18N
+        btnajouterfournisseur.setForeground(new java.awt.Color(255, 255, 255));
+        btnajouterfournisseur.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ajouter.png"))); // NOI18N
+        btnajouterfournisseur.setText("Ajouter");
+        btnajouterfournisseur.setBorderPainted(false);
+        btnajouterfournisseur.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnajouterfournisseurActionPerformed(evt);
+            }
+        });
+
+        btnprec.setBackground(new java.awt.Color(0, 204, 0));
+        btnprec.setFont(new java.awt.Font("Segoe UI", 0, 28)); // NOI18N
+        btnprec.setForeground(new java.awt.Color(255, 255, 255));
+        btnprec.setText("Page précedente");
+        btnprec.setBorderPainted(false);
+        btnprec.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnprecMouseClicked(evt);
+            }
+        });
+        btnprec.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnprecActionPerformed(evt);
+            }
+        });
+
+        btnaccueil.setBackground(new java.awt.Color(0, 204, 0));
+        btnaccueil.setFont(new java.awt.Font("Segoe UI", 0, 28)); // NOI18N
+        btnaccueil.setForeground(new java.awt.Color(255, 255, 255));
+        btnaccueil.setText("Page d'acceuil");
+        btnaccueil.setBorderPainted(false);
+        btnaccueil.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnaccueilMouseClicked(evt);
+            }
+        });
+        btnaccueil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnaccueilActionPerformed(evt);
+            }
+        });
+
+        inputcodefournisseur.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputcodefournisseurActionPerformed(evt);
+            }
+        });
+
+        prenomfournisseur.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prenomfournisseurActionPerformed(evt);
+            }
+        });
+
+        nomfournisseur.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nomfournisseurActionPerformed(evt);
+            }
+        });
+
+        inputadrfournisseur.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputadrfournisseurActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setBackground(new java.awt.Color(2, 153, 0));
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("code");
+        jLabel3.setOpaque(true);
+
+        jLabel4.setBackground(new java.awt.Color(2, 153, 0));
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("prenom");
+        jLabel4.setOpaque(true);
+
+        jLabel5.setBackground(new java.awt.Color(2, 153, 0));
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("nom ");
+        jLabel5.setOpaque(true);
+
+        jLabel6.setBackground(new java.awt.Color(2, 153, 0));
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("age");
+        jLabel6.setOpaque(true);
+
+        jLabel7.setBackground(new java.awt.Color(2, 153, 0));
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("telephone");
+        jLabel7.setOpaque(true);
+
+        jLabel8.setBackground(new java.awt.Color(2, 153, 0));
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("addresse");
+        jLabel8.setOpaque(true);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 741, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(171, 171, 171)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(62, 62, 62)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(inputcodefournisseur, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                            .addComponent(inputtelfournisseur)
+                            .addComponent(agefournisseur)
+                            .addComponent(nomfournisseur)
+                            .addComponent(prenomfournisseur, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                            .addComponent(inputadrfournisseur)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(76, 76, 76)
+                        .addComponent(btnprec, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(71, 71, 71)
+                        .addComponent(btnaccueil, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(99, 99, 99)
+                        .addComponent(btnajouterfournisseur, javax.swing.GroupLayout.PREFERRED_SIZE, 524, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(196, 196, 196))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnaccueil, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnprec, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(inputcodefournisseur, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(prenomfournisseur, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nomfournisseur, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(agefournisseur, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(inputtelfournisseur, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inputadrfournisseur, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnajouterfournisseur, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(22, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void agefournisseurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agefournisseurActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_agefournisseurActionPerformed
+
+    private void btnajouterfournisseurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnajouterfournisseurActionPerformed
+
+    }//GEN-LAST:event_btnajouterfournisseurActionPerformed
+
+    private void btnprecMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnprecMouseClicked
+        Gestionfournisseurs Gestionfournisseurs = new Gestionfournisseurs();
+        Gestionfournisseurs.setVisible(true);
+        Gestionfournisseurs.setLocationRelativeTo(null);
+        this.dispose();
+    }//GEN-LAST:event_btnprecMouseClicked
+
+    private void btnprecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnprecActionPerformed
+
+    }//GEN-LAST:event_btnprecActionPerformed
+
+    private void btnaccueilMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnaccueilMouseClicked
+        MainPage MainPage = new MainPage();
+        MainPage.setVisible(true);
+        MainPage.setLocationRelativeTo(null);
+        this.dispose();
+    }//GEN-LAST:event_btnaccueilMouseClicked
+
+    private void btnaccueilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaccueilActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnaccueilActionPerformed
+
+    private void inputcodefournisseurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputcodefournisseurActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputcodefournisseurActionPerformed
+
+    private void prenomfournisseurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prenomfournisseurActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_prenomfournisseurActionPerformed
+
+    private void nomfournisseurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nomfournisseurActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nomfournisseurActionPerformed
+
+    private void inputadrfournisseurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputadrfournisseurActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputadrfournisseurActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(ajouterfournisseur.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(ajouterfournisseur.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(ajouterfournisseur.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ajouterfournisseur.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new ajouterfournisseur().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField agefournisseur;
+    private javax.swing.JButton btnaccueil;
+    private javax.swing.JButton btnajouterfournisseur;
+    private javax.swing.JButton btnprec;
+    private javax.swing.JTextField inputadrfournisseur;
+    private javax.swing.JTextField inputcodefournisseur;
+    private javax.swing.JTextField inputtelfournisseur;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JTextField nomfournisseur;
+    private javax.swing.JTextField prenomfournisseur;
+    // End of variables declaration//GEN-END:variables
+}
